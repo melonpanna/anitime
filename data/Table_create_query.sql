@@ -1,6 +1,3 @@
-drop database if exists test;
-create database test;
-use test;
 DROP TABLE  if EXISTS bookmark cascade;
 DROP TABLE  if EXISTS `Profile` cascade;
 DROP TABLE  if EXISTS notice cascade;
@@ -246,7 +243,7 @@ ON UPDATE CASCADE;
 
 
 ALTER TABLE `Notice` ADD CONSTRAINT `FK_Member_TO_Notice` FOREIGN KEY (
-	`generalNo`
+	`memberNo`
 )
 REFERENCES `Member` (
 	`memberNo`
