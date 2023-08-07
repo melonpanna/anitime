@@ -1,7 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { css, styled } from "styled-components";
 
-export default function Modal({ close, center, posX, posY, children }) {
+export default function Modal({
+  close,
+  center,
+  posX,
+  posY,
+  children,
+  width,
+  height,
+  border_radius,
+}) {
   const modalRef = useRef(null);
   useEffect(() => {
     const handler = (event) => {
@@ -20,7 +29,15 @@ export default function Modal({ close, center, posX, posY, children }) {
   });
 
   return (
-    <ModalContainer $center={center} $posX={posX} $posY={posY} ref={modalRef}>
+    <ModalContainer
+      $center={center}
+      $posX={posX}
+      $posY={posY}
+      $width={width}
+      $height={height}
+      $border_radius={border_radius}
+      ref={modalRef}
+    >
       {children}
     </ModalContainer>
   );
@@ -31,6 +48,8 @@ const ModalContainer = styled.div`
   background-color: #ffffff;
   z-index: 10;
   position: absolute;
+  width: ${(props) => props.$width || "auto"};
+  height: ${(props) => props.$height || "auto"};
   ${(props) =>
     props.$center &&
     css`
@@ -41,5 +60,5 @@ const ModalContainer = styled.div`
     props.$posX && "translateX(" + props.$posX + ")"} ${(props) =>
     props.$posY && "translateY(" + props.$posY + ")"};
 
-  border-radius: 8px;
+  border-radius: ${(props) => props.$border_radius || "8px"};
 `;

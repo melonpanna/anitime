@@ -1,22 +1,64 @@
-import ProfileTab from "components/Profile/ProfileTab";
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { css, styled } from "styled-components";
 import { HorizontalContainer } from "styled/styled";
-import animaldata from "components/Missing/animaldata2.json";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setDesertionNo } from "reducer/detailInfo.js";
+import http from "api/commonHttp";
+import "intersection-observer";
+import ProfileTab from "components/Profile/ProfileTab";
 
 export default function Missing() {
-  const animals = animaldata.animals;
+  const [animals, setAnimals] = useState([]);
+  const [target, setTarget] = useState(null);
+  const page = useRef(0);
+  let dispatch = useDispatch();
+
+  const fetchData = async () => {
+    try {
+      const response = await http.get(
+        `desertion?generalNo=2&kindType=0&genderType=0&sortType=0&curPageNo=${page.current}`
+      );
+      const newData = await response.data;
+      setAnimals((prev) => [...prev, ...newData]);
+      page.current++;
+    } catch (error) {
+      console.log("에러메시지: ", error);
+    }
+  };
+
+  useEffect(() => {
+    let observer;
+    const handleIntersect = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          fetchData();
+        }
+      });
+    };
+
+    observer = new IntersectionObserver(handleIntersect, { threshold: 1 });
+    if (target) {
+      observer.observe(target);
+    }
+
+    return () => observer && observer.disconnect();
+  }, [target]);
 
   return (
     <HorizontalContainer>
       <ListFilterContainer>
         <ListContainer>
           {animals.map((animal, idx) => (
-            <AnimalImg key={idx}>
+            <AnimalImg
+              key={idx}
+              onClick={() => {
+                dispatch(setDesertionNo(animal.desertionNo));
+              }}
+            >
               <DivP>
                 <Div>
-                  <img src={animal.image} alt="AnimalImage" height="210px" />
+                  <Img src={animal.thumbnail} alt="AnimalImage" />
                 </Div>
                 <Div2>
                   <Span1>
@@ -25,9 +67,9 @@ export default function Missing() {
                     {animal.processState}
                   </Span1>
                   <Span2>
-                    {animal.upkind}/{animal.kind}
+                    {animal.category}/{animal.detailKind}
                     <span>
-                      {animal.sexCd === "암컷" ? (
+                      {animal.sexcd === "F" ? (
                         <img src="/icons/ic_female.svg" alt="female" />
                       ) : (
                         <img src="/icons/ic_male.svg" alt="male" />
@@ -38,6 +80,7 @@ export default function Missing() {
               </DivP>
             </AnimalImg>
           ))}
+          <Target ref={setTarget} />
         </ListContainer>
       </ListFilterContainer>
       <DetailViewBox>
@@ -54,6 +97,7 @@ const ListFilterContainer = styled.div`
   display: flex;
   margin-right: 40px;
   flex: 2;
+  margin-top: 48px;
 `;
 
 const ListContainer = styled.div`
@@ -62,12 +106,9 @@ const ListContainer = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
   align-content: flex-start;
-  height: 600px;
-  padding: 10px;
+  height: 700px;
   overflow-y: scroll;
   text-align: center;
-  border: 1px solid #ccc;
-  border-radius: 8px;
   ${css`
     &::-webkit-scrollbar {
       display: none;
@@ -77,12 +118,13 @@ const ListContainer = styled.div`
 
 const DetailViewBox = styled.div`
   flex: 1;
+  margin-top: 48px;
 `;
 
 const AnimalImg = styled.div`
   width: 33.33%;
   height: 240px;
-  margin-top: 20px;
+  margin-bottom: 28px;
 `;
 
 const Span1 = styled.span`
@@ -116,6 +158,15 @@ const DivP = styled.div`
 
 const Blank = styled.span`
   margin-right: 5px;
+`;
+const Target = styled.div`
+  width: 100%;
+  height: 20px;
+`;
+const Img = styled.img`
+  width: 220px;
+  height: 220px;
+  border-radius: 8px;
 `;
 
 const RegistBtn = styled.div`
