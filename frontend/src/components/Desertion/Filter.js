@@ -1,42 +1,64 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Modal from "components/Modal/Modal";
-import {styled} from "styled-components";
+import { styled } from "styled-components";
 import FilterItem from "./FilterItem";
+import { useSelector } from "react-redux";
 
 export default function Filter() {
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  let dogChecked = useSelector((state) => state.filterInfo.dogChecked);
+  let catChecked = useSelector((state) => state.filterInfo.catChecked);
+  let femaleChecked = useSelector((state) => state.filterInfo.femaleChecked);
+  let maleChecked = useSelector((state) => state.filterInfo.maleChecked);
+  const openNotice = () => {
+    setIsOpen(true);
+  };
 
-    const toggleOpen = () => setIsOpen((p) => !p);
-    
-    const closeNotice = () => {
-        setIsOpen(false);
-    }
-    
-    return (
-        <>
-        <FilterButton
-         onClick={(event) => {
-            event.stopPropagation();
-            toggleOpen();
+  const closeNotice = () => {
+    setIsOpen(false);
+  };
+  // const dispatch = useDispatch();
+
+  return (
+    <>
+      <FilterButton
+        onClick={(event) => {
+          event.stopPropagation();
+          openNotice();
         }}
-        >필터
+      >
+        <Span>필터</Span>
         {isOpen && (
-            <Modal posX="-75px" posY="-85px" close={closeNotice}>
-                <FilterItem/>
-            </Modal>
+          <Modal
+            posX="-20px"
+            posY="-75px"
+            width="230px"
+            height="200px"
+            close={closeNotice}
+          >
+            <FilterItem
+              dogChecked={dogChecked}
+              catChecked={catChecked}
+              femaleChecked={femaleChecked}
+              maleChecked={maleChecked}
+            />
+          </Modal>
         )}
-         </FilterButton>
-        </>
-    );
-
+      </FilterButton>
+    </>
+  );
 }
 
 const FilterButton = styled.button`
-  margin-right:20px;
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
+  width: 105px;
+  height: 40px;
+  margin-right: 8px;
+  background-color: #f8f8f8;
+  color: black;
+  border: 2px solid #e8ebee;
+  border-radius: 12px;
   cursor: pointer;
+`;
+const Span = styled.span`
+  font-size: 15px;
 `;
