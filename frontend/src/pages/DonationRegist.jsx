@@ -3,7 +3,16 @@ import http from "api/commonHttp";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { keyframes, styled } from "styled-components";
+import {
+  WriteContainer,
+  WriteTitle,
+  Row,
+  InputLabel,
+  Input,
+  Poster,
+  Red,
+  MainContainer,
+} from "styled/styled";
 
 export default function DonationRegist() {
   const [title, setTitle] = useState("");
@@ -54,7 +63,6 @@ export default function DonationRegist() {
 
     setThumbnail(file);
     const reader = new FileReader();
-    console.log("???????");
     reader.onloadend = () => {
       setThumbnailUrl(reader.result);
     };
@@ -113,15 +121,8 @@ export default function DonationRegist() {
       .catch((error) => console.log(error));
   };
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        marginTop: "96px",
-        marginBottom: "40px",
-      }}
-    >
-      <Container>
+    <MainContainer>
+      <WriteContainer>
         <h2 style={{ textAlign: "left", margin: 0 }}>후원공고등록</h2>
         <div
           style={{
@@ -137,11 +138,11 @@ export default function DonationRegist() {
         <form onSubmit={handleSubmit}>
           <div style={{ margin: 0, display: "flex", gap: "56px" }}>
             <div style={{ flex: 4, alignItems: "center", maxWidth: "100%" }}>
-              <Title>후원 정보</Title>
+              <WriteTitle>후원 정보</WriteTitle>
               <Row>
-                <Label htmlFor="title">
+                <InputLabel htmlFor="title">
                   공고 제목<Red>*</Red>
-                </Label>
+                </InputLabel>
                 <Input
                   type="text"
                   value={title}
@@ -151,9 +152,9 @@ export default function DonationRegist() {
                 />
               </Row>
               <Row>
-                <Label htmlFor="sDate">
+                <InputLabel htmlFor="sDate">
                   공고시작일<Red>*</Red>
-                </Label>
+                </InputLabel>
                 <Input
                   type="number"
                   value={sYear}
@@ -175,9 +176,9 @@ export default function DonationRegist() {
                 />
               </Row>
               <Row>
-                <Label htmlFor="eDate">
+                <InputLabel htmlFor="eDate">
                   공고종료일<Red>*</Red>
-                </Label>
+                </InputLabel>
                 <Input
                   type="number"
                   value={eYear}
@@ -199,9 +200,9 @@ export default function DonationRegist() {
                 />
               </Row>
               <Row>
-                <Label htmlFor="goal">
+                <InputLabel htmlFor="goal">
                   목표금액<Red>*</Red>
-                </Label>
+                </InputLabel>
                 <Input
                   type="number"
                   value={goal}
@@ -211,9 +212,9 @@ export default function DonationRegist() {
                 />
               </Row>
               <Row>
-                <Label htmlFor="poster">
+                <InputLabel htmlFor="poster">
                   포스터첨부<Red>*</Red>
-                </Label>
+                </InputLabel>
                 <input
                   type="file"
                   ref={posterInputRef}
@@ -249,7 +250,7 @@ export default function DonationRegist() {
               </Row>
             </div>
             <div style={{ flex: 1, maxWidth: "100%" }}>
-              <Title>썸네일</Title>
+              <WriteTitle>썸네일</WriteTitle>
               <input
                 ref={thumbnailInputRef}
                 type="file"
@@ -300,94 +301,7 @@ export default function DonationRegist() {
             </Button>
           </div>
         </form>
-      </Container>
-    </div>
+      </WriteContainer>
+    </MainContainer>
   );
 }
-
-const Container = styled.div`
-  width: 68%;
-  min-width: 343px;
-  border-radius: 8px;
-  border: 1px solid var(--lightgrey, #e8ebee);
-  position: relative;
-  padding: 80px;
-`;
-
-const Title = styled.div`
-  text-align: left;
-  font-size: 16px;
-  color: var(--blackgrey, #35383b);
-  font-weight: 700;
-  margin-bottom: 24px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-  width: 100%;
-`;
-
-const Label = styled.label`
-  min-width: 100px;
-  text-align: left;
-  font-size: 14px;
-  color: var(--grey-2, #a7aeb4);
-  height: 50px;
-  line-height: 50px;
-`;
-
-const Input = styled.input`
-  flex: 1;
-  width: 86%;
-  background-color: var(--lightestgrey, #f7f8fa);
-  border: 0.77px solid var(--lightgrey, #e8ebee);
-  border-radius: 12px;
-  height: 50px;
-  box-sizing: border-box;
-  padding-left: 24px;
-  color: #35383b;
-  outline: none;
-
-  /* Spinner 숨기기 */
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  /* Firefox */
-  &[type="number"] {
-    -moz-appearance: textfield;
-  }
-
-  /* 클릭시 border color 변경 */
-  &:focus {
-    border: 1px solid #3994f0;
-  }
-
-  &::placeholder {
-    color: #a7aeb4;
-  }
-`;
-const Poster = styled.div`
-  flex: 5;
-  width: 86%;
-  background-color: var(--lightestgrey, #f7f8fa);
-  border: 0.77px solid var(--lightgrey, #e8ebee);
-  border-radius: 12px;
-  height: 50px;
-  box-sizing: border-box;
-  padding-left: 24px;
-  color: var(--grey-2, #a7aeb4);
-  font-size: 14px;
-  font-weight: 400;
-  display: flex;
-  align-items: center;
-`;
-
-const Red = styled.span`
-  color: var(--red, #ff7676);
-`;

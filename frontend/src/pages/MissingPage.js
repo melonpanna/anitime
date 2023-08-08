@@ -2,24 +2,28 @@ import React, { useRef, useState, useEffect } from "react";
 import { css, styled } from "styled-components";
 import { HorizontalContainer } from "styled/styled";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setDesertionNo } from "reducer/detailInfo.js";
 import http from "api/commonHttp";
 import "intersection-observer";
 import ProfileTab from "components/Profile/ProfileTab";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 export default function Missing() {
   const [animals, setAnimals] = useState([]);
   const [target, setTarget] = useState(null);
   const page = useRef(0);
   let dispatch = useDispatch();
-
+  let profileNo = useSelector((state) => state.detailInfo.profileNo);
+  console.log(profileNo);
   const fetchData = async () => {
     try {
       const response = await http.get(
-        `desertion?generalNo=2&kindType=0&genderType=0&sortType=0&curPageNo=${page.current}`
+        `recommand/${profileNo}?curPageNo=${page.current}`
       );
       const newData = await response.data;
+      console.log("recommand result");
+      console.log("newData");
       setAnimals((prev) => [...prev, ...newData]);
       page.current++;
     } catch (error) {
@@ -53,6 +57,7 @@ export default function Missing() {
             <AnimalImg
               key={idx}
               onClick={() => {
+                console.log(animal.desertionNo);
                 dispatch(setDesertionNo(animal.desertionNo));
               }}
             >
@@ -86,7 +91,7 @@ export default function Missing() {
       <DetailViewBox>
         <ProfileTab />
       </DetailViewBox>
-      <Link to="/missing/regist">
+      <Link to="/missing/write">
         <RegistBtn />
       </Link>
     </HorizontalContainer>
@@ -161,7 +166,9 @@ const Blank = styled.span`
 `;
 const Target = styled.div`
   width: 100%;
-  height: 20px;
+  height: 35px;
+  position: relative;
+  bottom: 5px;
 `;
 const Img = styled.img`
   width: 220px;
