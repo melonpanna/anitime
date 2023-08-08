@@ -98,6 +98,7 @@ public class ChatServiceImpl implements ChatService {
 		ChatMessage chat = message.toEntity(room, sender);
 		chat = chatMessageRepo.save(chat);
 		return ChatRes.builder()
+				.chatNo(chat.getChatNo())
 				.sendNo(chat.getSender().getMemberNo())
 				.content(chat.getContent())
 				.writtenTime(chat.getWrittenTime()).build();
@@ -107,6 +108,7 @@ public class ChatServiceImpl implements ChatService {
 		List<ChatRes> resChat = new ArrayList<>();
 		chatMessageRepo.findChatMessageByChatRoom_RoomNoOrderByWrittenTimeAsc(roomNo).stream().forEach(chatMessage -> {
 			resChat.add(ChatRes.builder()
+					.chatNo(chatMessage.getChatNo())
 					.sendNo(chatMessage.getSender().getMemberNo())
 					.content(chatMessage.getContent())
 					.writtenTime(chatMessage.getWrittenTime()).build());
