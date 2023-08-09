@@ -135,6 +135,14 @@ const router = createBrowserRouter([
               };
             },
           },
+          {
+            path: ":id",
+            async lazy() {
+              return {
+                Component: (await import("pages/DonationDetailPage")).default,
+              };
+            },
+          },
         ],
       },
       {
@@ -162,7 +170,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "meeting",
+    path: "meeting/:meetingNo",
     async lazy() {
       return {
         Component: (await import("pages/MeetingPage")).default,

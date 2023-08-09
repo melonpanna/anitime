@@ -28,29 +28,22 @@ export default function Desertion() {
 
   const fetchData = async () => {
     try {
+      page.current++;
       let response = await http.get(
         `desertion?generalNo=0&kindType=${kind.current}&genderType=${gender.current}&sortType=${sort.current}&curPageNo=${page.current}`
       );
-      const newData = await response.data;
+      let newData = await response.data;
       setAnimals((prev) => [...prev, ...newData]);
-      page.current++;
     } catch (error) {
       console.log("에러메시지: ", error);
     }
   };
 
   useEffect(() => {
-    setAnimals([]);
-    page.current = 0;
-    fetchData();
-  }, [kindType, genderType, sortType]);
-
-  useEffect(() => {
     let observer;
     const handleIntersect = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          console.log("success");
           fetchData();
         }
       });
@@ -63,6 +56,12 @@ export default function Desertion() {
 
     return () => observer && observer.disconnect();
   }, [target]);
+
+  useEffect(() => {
+    setAnimals([]);
+    page.current = -1;
+    fetchData();
+  }, [kindType, genderType, sortType]);
 
   const toggleBookmark = (desertionNo) => {
     setAnimals((prevAnimals) =>
@@ -156,6 +155,7 @@ const ListContainer = styled.div`
   display: flex;
   flex-grow: 2;
   flex-wrap: wrap;
+  margin-top:10px;
   justify-content: flex-start;
   align-content: flex-start;
   height: 700px;
@@ -229,6 +229,7 @@ const Target = styled.div`
 
 const Img = styled.img`
   width: 220px;
+  min-width: 220px;
   height: 220px;
   border-radius: 8px;
 `;
@@ -238,8 +239,8 @@ const AnimalContainer = styled.div`
 
 const BookmarkButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 28px;
+  top: 8px;
+  right: 40px;
   width: 35px;
   height: 35px;
   background-color: transparent;
