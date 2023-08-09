@@ -2,6 +2,7 @@ package com.moi.anitime.model.service.animal;
 
 import com.moi.anitime.api.response.animal.AnimalPreviewRes;
 import com.moi.anitime.api.response.profile.ProfileRes;
+import com.moi.anitime.exception.animal.CountAnimalsException;
 import com.moi.anitime.exception.animal.ListLoadingException;
 import com.moi.anitime.exception.member.NonExistMemberNoException;
 import com.moi.anitime.model.entity.animal.Animal;
@@ -11,6 +12,7 @@ import com.moi.anitime.model.repo.MemberRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
@@ -39,25 +41,23 @@ public class AnimalServiceImpl implements AnimalService{
             case 2://고양이만
                 kind="[고양이]%";
         }
-        switch (genderType){
+        switch (genderType) {
             case 0://전체보기(미상 포함)
-                sexcd='%';
+                sexcd = '%';
                 break;
             case 1://수컷만
-                sexcd='M';
+                sexcd = 'M';
                 break;
             case 2://암컷만
-                sexcd='F';
+                sexcd = 'F';
         }
         switch(sortType){
             case 0://공고 최신순(default)
-                sortQuery="A.noticeSdate desc";
-                break;
+                return animalRepo.getAnimalDesc(generalNo,kind,sexcd,PageRequest.of(curPageNo, 9));
             case 1://공고 오래된순
-                sortQuery="A.noticeSdate asc";
-                break;
+                return animalRepo.getAnimalAsc(generalNo,kind,sexcd,PageRequest.of(curPageNo, 9));
+            default:throw new ListLoadingException();
         }
-        return animalRepo.getAnimal(generalNo,kind,sexcd,sortQuery,PageRequest.of(curPageNo, 9));
     }
 
     @Override
@@ -125,5 +125,18 @@ public class AnimalServiceImpl implements AnimalService{
         return animalListres;
     }
 
+    @Override
+    public int countNewAnimals() throws CountAnimalsException {
+        return animalRepo.countNewAnimals();
+    }
 
+    @Override
+    public int countKeepingAnimals() throws CountAnimalsException{
+        return animalRepo.countKeepingAnimals();
+    }
+
+    @Override
+    public int countPostingAnimals() throws CountAnimalsException {
+        return animalRepo.countPostingAnimals();
+    }
 }

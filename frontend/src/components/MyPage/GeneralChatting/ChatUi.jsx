@@ -15,15 +15,24 @@ export default function ChatUi({ width, height }) {
 
   const socket = useSelector((state) => state.stomp.socket);
   const stompClient = useSelector((state) => state.stomp.client);
-  const [input, setInput] = React.useState("");
+  const [input, setInput] = useState("");
   const roomNo = useSelector((state) => state.chatRoom.roomNo);
   const roomName = useSelector((state) => state.chatRoom.name);
   const memberNo = useSelector((state) => state.member.memberNo);
   const [messages, setMessages] = useState([]);
 
-  
+  var messageArea = null;
+
+  useEffect(() => {
+    messageArea = document.querySelector("#messageArea");
+    messageArea.scrollTop = messageArea.scrollHeight;
+  })
+
+
   const onConnected = () => {
     console.log("stomp connected")
+    stompClient.unsubscribe("curRoom");
+    stompClient.subscribe(`/sub/message/${roomNo}`, onMessageReceived, {id : "curRoom"});
   }
   
   const onError = () => {
@@ -31,6 +40,7 @@ export default function ChatUi({ width, height }) {
   }
   
   const onMessageReceived = (payload) => {
+    console.log("messageReceive")
     setMessages((prev) => {
       console.log(payload)
       return [...prev, JSON.parse(payload.body)]
@@ -88,6 +98,12 @@ export default function ChatUi({ width, height }) {
     setInput(event.target.value);
   };
 
+  const handleOnKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSend(); // Enter 입력이 되면 클릭 이벤트 실행
+    }
+  };
+
   const Message = ({ message }) => {
     const isMe = memberNo === message.sendNo ? true : false;
   
@@ -133,6 +149,9 @@ export default function ChatUi({ width, height }) {
     );
   };
 
+
+
+
   return (
     <ChatBox
       $width={width}
@@ -145,13 +164,16 @@ export default function ChatUi({ width, height }) {
       <ChatHeader>
         <Text>
           <Font1>{roomName}</Font1>
+          <Font2></Font2>
         </Text>
       </ChatHeader>
-      <Box2>
-        {messages.map((message) => (
-          <Message key={message.chatNo} message={message} />
-        ))}
-      </Box2>
+        <Box2 id="messageArea">
+          {messages.map((message) => (
+            <li>
+            <Message key={message.chatNo} message={message} />
+            </li>
+          ))}
+        </Box2>
       <Box
         sx={{
           p: 2,
@@ -162,7 +184,7 @@ export default function ChatUi({ width, height }) {
           padding: "0",
         }}
       >
-        <InputText type="text" value={input} onChange={handleInputChange} />
+        <InputText type="text" value={input} onChange={handleInputChange} onKeyDown={handleOnKeyDown}/>
         <button
           onClick={handleSend}
           style={{ padding: "16px", backgroundColor: "white", border: "0px" }}
@@ -173,8 +195,6 @@ export default function ChatUi({ width, height }) {
     </ChatBox>
   );
 }
-
-
 
 const Font1 = styled.div`
   font-size: 16px;
@@ -199,7 +219,7 @@ const Time = styled.span`
   margin-bottom: 5px;
   color: black;
 `;
-const Box2 = styled.div`
+const Box2 = styled.ul`
   flex-grow: 1;
   overflow-y: scroll;
   padding: 20px;
