@@ -43,6 +43,8 @@ public class SecurityConfig {
                 .antMatchers("/api/desertion/new/**").permitAll()
                 .antMatchers("/api/desertion/**").permitAll()
                 .antMatchers("/ws/chat/**").permitAll()
+                .antMatchers("/api/donation").permitAll()
+                .antMatchers("/api/donation/**").authenticated()
                 .antMatchers("/api/openvidu/**").permitAll()
                 .antMatchers("/api/swagger-ui/**").permitAll()
                 .antMatchers( "/v3/api-docs","/swagger*/**").permitAll()
