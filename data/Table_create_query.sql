@@ -26,6 +26,7 @@ COLLATE='utf8mb4_bin'
 ;
 
 
+
 CREATE TABLE `Animal` (
 	`desertionNo`	bigint	NOT NULL PRIMARY key,
 	`shelterNo`	Int	NOT NULL,
