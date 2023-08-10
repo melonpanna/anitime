@@ -16,7 +16,7 @@ export default function AnimalItem({ animal, handleClick, handleBookmark }) {
             ) : (
               <EmptyHeartIcon
                 src="/icons/btn_favorite_inactive.svg"
-                alt="Bookmark"
+                alt="NotBookmark"
               />
             )}
           </BookmarkButton>
@@ -88,6 +88,8 @@ const Img = styled.img`
   min-width: 220px;
   height: 220px;
   border-radius: 8px;
+  object-fit:cover;
+  object-position: center center;
 `;
 const AnimalContainer = styled.div`
   position: relative;
