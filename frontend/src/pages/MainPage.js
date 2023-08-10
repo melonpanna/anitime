@@ -3,35 +3,41 @@ import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { MainContainer } from "styled/styled";
 import http from "api/commonHttp";
+import CountUp from "react-countup";
 
 export default function MainPage() {
-  const [newAnimals,setNewAnimals]=useState(-1);
-  const [posting,setPosting]=useState(-1);
-  const [keeping,setKeeping]=useState(-1);
+  const [newAnimals, setNewAnimals] = useState(-1);
+  const [posting, setPosting] = useState(-1);
+  const [keeping, setKeeping] = useState(-1);
 
   useEffect(() => {
     // 서버와 통신하여 데이터 가져오기
-    const data = [-1,-1,-1];
+    const data = [-1, -1, -1];
     http
       .get(`desertion/new`)
       .then((res) => {
         setNewAnimals(res.data);
       })
-      .catch((err) => {window.alert(err)});
+      .catch((err) => {
+        window.alert(err);
+      });
     http
       .get(`desertion/count/posting`)
       .then((res) => {
         setPosting(res.data);
       })
-      .catch((err) => {window.alert(err)});
+      .catch((err) => {
+        window.alert(err);
+      });
     http
       .get(`desertion/count/keeping`)
       .then((res) => {
         setKeeping(res.data);
       })
-      .catch((err) => {window.alert(err)});
+      .catch((err) => {
+        window.alert(err);
+      });
   }, []);
-
   return (
     <MainContainer $vertical>
       <MainImg>
@@ -44,13 +50,25 @@ export default function MainPage() {
 
       <ReportDiv>
         <ReportText>
-          오늘 구조된 동물 <ReportNumber>{newAnimals}</ReportNumber>마리
+          오늘 구조된 동물{" "}
+          <ReportNumber>
+            <CountUp start={0} end={newAnimals} delay={2} />
+          </ReportNumber>
+          마리
         </ReportText>
         <ReportText>
-          현재 공고 동물 <ReportNumber>{posting}</ReportNumber>마리
+          현재 공고 동물{" "}
+          <ReportNumber>
+            <CountUp start={0} end={posting} delay={2} />
+          </ReportNumber>
+          마리
         </ReportText>
         <ReportText>
-          보호 동물 <ReportNumber>{keeping}</ReportNumber>마리
+          보호 동물{" "}
+          <ReportNumber>
+            <CountUp start={0} end={keeping} delay={2} />
+          </ReportNumber>
+          마리
         </ReportText>
       </ReportDiv>
 
@@ -78,8 +96,9 @@ export default function MainPage() {
             </HowIcon>
             <HowCardTitle>비대면 채널을 통한 입양</HowCardTitle>
             <HowCartContent>
-              이 항목에 대한 설명을 울랄라로 적습니다.
-              울랄라리아리이라이아리아웅라우라으륑링루ㅏㅣ우리위루아ㅣ루이ㅜ라ㅣ우리우라ㅣㅇ루아ㅣ루아ㅣ루아ㅣ루아ㅣㄹ울아ㅣㅜㄹ아ㅣㄹ아ㅣㅜㄹ이ㅜ라ㅣ우라ㅣㅜ라ㅣ우라ㅣㅇ
+              입양 신청자는 가족이 되고 싶은 동물 친구들을 비대면으로 먼저
+              만나볼 수 있고, 보호소는 입양 신청자의 환경을 비대면으로 확인할 수
+              있습니다.
             </HowCartContent>
           </HowCard>
           {/* card 2 */}
@@ -87,10 +106,10 @@ export default function MainPage() {
             <HowIcon>
               <img src="icons/how/img_home_how2.svg" alt="how icon" />
             </HowIcon>
-            <HowCardTitle>실종된 나의 가족을 찾는 방법</HowCardTitle>
+            <HowCardTitle>실종된 나의 친구를 찾는 방법</HowCardTitle>
             <HowCartContent>
-              이 항목에 대한 설명을 울랄라로 적습니다.
-              울랄라리아리이라이아리아웅라우라으륑링루ㅏㅣ우리위루아ㅣ루이ㅜ라ㅣ우리우라ㅣㅇ루아ㅣ루아ㅣ루아ㅣ루아ㅣㄹ울아ㅣㅜㄹ아ㅣㄹ아ㅣㅜㄹ이ㅜ라ㅣ우라ㅣㅜ라ㅣ우라ㅣㅇ
+              실종된 동물을 등록하면 실종 동물의 종, 털 색, 위치를 기반으로
+              유사한 공고/보호 동물을 추천해 드립니다.
             </HowCartContent>
           </HowCard>
           {/* card 3 */}
@@ -98,10 +117,11 @@ export default function MainPage() {
             <HowIcon>
               <img src="icons/how/img_home_how3.svg" alt="how icon" />
             </HowIcon>
-            <HowCardTitle>지갑을 열어라 나의 지갑이여</HowCardTitle>
+            <HowCardTitle>동물 친구들에게 더 나은 환경을</HowCardTitle>
             <HowCartContent>
-              이 항목에 대한 설명을 울랄라로 적습니다.
-              울랄라리아리이라이아리아웅라우라으륑링루ㅏㅣ우리위루아ㅣ루이ㅜ라ㅣ우리우라ㅣㅇ루아ㅣ루아ㅣ루아ㅣ루아ㅣㄹ울아ㅣㅜㄹ아ㅣㄹ아ㅣㅜㄹ이ㅜ라ㅣ우라ㅣㅜ라ㅣ우라ㅣㅇ
+              다치거나, 열악한 환경에 처한 동물들에게 후원할 수 있도록, 인증받은
+              보호소에서 공고를 올릴 수 있고, 이용자들은 이에 후원할 수
+              있습니다.
             </HowCartContent>
           </HowCard>
         </HowBody>
@@ -145,6 +165,8 @@ const ReportDiv = styled.div`
 `;
 
 const ReportText = styled.span`
+  font-size: 18px;
+  font-weight: 700;
   color: #35383b;
 `;
 

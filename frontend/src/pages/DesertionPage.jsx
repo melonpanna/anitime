@@ -23,9 +23,11 @@ export default function Desertion() {
 
   let genderType = useSelector((state) => state.filterInfo.genderType);
   gender.current = genderType;
-
+  let jwttoken = useSelector((state) => state.member.token);
   let sortType = useSelector((state) => state.sortInfo.sortType);
   sort.current = sortType;
+
+  let memberNo = useSelector((state) => state.member.memberNo);
 
   const fetchData = async () => {
     try {
@@ -64,7 +66,7 @@ export default function Desertion() {
     fetchData();
   }, [kindType, genderType, sortType]);
 
-  const toggleBookmark = (desertionNo) => {
+  const toggleBookmark = async (desertionNo) => {
     setAnimals((prevAnimals) =>
       prevAnimals.map((prevAnimal) =>
         prevAnimal.desertionNo === desertionNo
@@ -72,8 +74,20 @@ export default function Desertion() {
           : prevAnimal
       )
     );
+    await http
+      .post(`desertion/like`, {
+        desertionNo: desertionNo,
+        generalNo: memberNo,
+      })
+      .then()
+      .catch((err) => console.log("에러"));
   };
-
+  function test(desertionNo){
+    window.scrollTo({top: 0,
+      left: 0,
+      behavior: "smooth",});
+    dispatch(setDesertionNo(desertionNo));
+  }
   return (
     <HorizontalContainer>
       <ListFilterContainer>
@@ -88,7 +102,7 @@ export default function Desertion() {
               <AnimalItem
                 animal={animal}
                 // AnimalImg onClick
-                handleClick={() => dispatch(setDesertionNo(animal.desertionNo))}
+                handleClick={()=>test(animal.desertionNo)}
                 // BookmarkButton onClick
                 handleBookmark={() => toggleBookmark(animal.desertionNo)}
               />
@@ -98,7 +112,7 @@ export default function Desertion() {
         </ListContainer>
       </ListFilterContainer>
       <DetailViewBox>
-        <DesertionDetail />
+        <DesertionDetail readOnly={!jwttoken} />
       </DetailViewBox>
     </HorizontalContainer>
   );
