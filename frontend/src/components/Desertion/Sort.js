@@ -1,52 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "components/Modal/Modal";
 import { styled } from "styled-components";
 import SortItem from "./SortItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setAscClicked,
+  setDescClicked,
+  setSortSelected,
+  setSortType,
+} from "reducer/sortInfo";
 
 export default function Sort() {
   const [isOpen, setIsOpen] = useState(false);
-  const [arrowUp, setArrowUp] = useState(false);
-  let descClicked = useSelector((state) => state.sortInfo.descClicked);
-  let ascClicked = useSelector((state) => state.sortInfo.ascClicked);
+
   let sortSelected = useSelector((state) => state.sortInfo.sortSelected);
-
-  const openNotice = () => {
-    setIsOpen(true);
-    setArrowUp(true);
-  };
-
-  // const toggleOpen = () => {
-  //   setIsOpen((prev) => !prev);
-  // };
+  let dispatch = useDispatch();
 
   const closeNotice = () => {
     setIsOpen(false);
-    setArrowUp(false);
   };
-
+  useEffect(() => {
+    return () => {
+      dispatch(setSortType(0));
+      dispatch(setAscClicked(false));
+      dispatch(setDescClicked(false));
+      dispatch(setSortSelected("정렬"));
+    };
+  }, []);
   return (
     <>
       <SortButton
         onClick={(event) => {
           event.stopPropagation();
-          openNotice();
+          setIsOpen((p) => !p);
         }}
+        className={isOpen ? "active" : ""}
       >
         <Span>{sortSelected}</Span>
         <Span>
-          {arrowUp ? (
+          {isOpen ? (
             <img src="icons/ic_arrow_up.svg" />
           ) : (
             <img src="icons/ic_arrow_bottom.svg" />
           )}
         </Span>
-        {isOpen && (
-          <Modal posX="49px" posY="25px" close={closeNotice}>
-            <SortItem descClicked={descClicked} ascClicked={ascClicked} />
-          </Modal>
-        )}
       </SortButton>
+      {isOpen && (
+        <Modal posX="42px" posY="5px" close={closeNotice}>
+          <SortItem />
+        </Modal>
+      )}
     </>
   );
 }
@@ -64,6 +67,10 @@ const SortButton = styled.button`
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
+  &.active {
+    background-color: #e1f0ff;
+    border: 2px solid #3994f0;
+  }
 `;
 const Span = styled.span`
   font-size: 15px;
