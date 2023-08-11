@@ -6,7 +6,9 @@ import com.moi.anitime.exception.animal.CountAnimalsException;
 import com.moi.anitime.exception.animal.ListLoadingException;
 import com.moi.anitime.exception.member.NonExistMemberNoException;
 import com.moi.anitime.model.entity.animal.Animal;
+import com.moi.anitime.model.entity.animal.AnimalCount;
 import com.moi.anitime.model.entity.profile.Profile;
+import com.moi.anitime.model.repo.AnimalCountRepo;
 import com.moi.anitime.model.repo.AnimalRepo;
 import com.moi.anitime.model.repo.MemberRepo;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
-import java.util.List;
-import java.util.Optional;
-import java.util.StringTokenizer;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class AnimalServiceImpl implements AnimalService{
     private final AnimalRepo animalRepo;
     private final MemberRepo memberRepo;
+    private final AnimalCountRepo animalCountRepo;
     @Override
     public List<AnimalPreviewRes> getAllAnimal(int generalNo, int kindType, int genderType, int sortType, int curPageNo) throws ListLoadingException {
         String kind="";
@@ -74,6 +76,7 @@ public class AnimalServiceImpl implements AnimalService{
                             .thumbnail(animal.getImage2())
                             .category(temp.substring(1, temp.length()-1))
                             .detailKind(token.nextToken())
+                            .processState(animal.getProcessState())
                             .isBookmarked(true)
                             .build();
                     return animalPreviewRes;
@@ -90,7 +93,6 @@ public class AnimalServiceImpl implements AnimalService{
 
     @Override
     public void dataUpdate(List<Animal> animalList) {
-        System.out.println(animalList.size());
         animalRepo.saveAll(animalList);
     }
 
@@ -140,5 +142,29 @@ public class AnimalServiceImpl implements AnimalService{
     @Override
     public int countPostingAnimals() throws CountAnimalsException {
         return animalRepo.countPostingAnimals();
+    }
+
+    @Override
+    public List<AnimalCount> getAnimalCount() {
+        return animalCountRepo.findAll() == null ? null : animalCountRepo.findAll();
+    }
+
+    @Override
+    public void cntDataUpdate(List<AnimalCount> animalCountls) {
+        animalCountRepo.saveAll(animalCountls);
+    }
+
+
+    public Map<String, Integer> countReport() throws CountAnimalsException {
+        int newAnimals = animalRepo.countNewAnimals();
+        int keeping = animalRepo.countKeepingAnimals();
+        int posting = animalRepo.countPostingAnimals();
+
+        Map<String, Integer> res = new HashMap<>();
+        res.put("newAnimals", newAnimals);
+        res.put("keeping", keeping);
+        res.put("posting", posting);
+
+        return res;
     }
 }
