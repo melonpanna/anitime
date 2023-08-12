@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,16 +17,18 @@ import java.sql.SQLException;
 @RestController
 @RequiredArgsConstructor
 public class MessageController {
-    private final RabbitTemplate rabbitTemplate;
+    private final SimpMessageSendingOperations smso;
     private final ChatService chatService;
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
     @Value("${rabbitmq.routing.key}")
     private String route_key;
 
-    @MessageMapping("/message")
+    @MessageMapping("chat.message")
     public void message(ChatMessageReq message) {
         ChatRes chat = chatService.sendChat(message);
-        rabbitTemplate.convertAndSend(exchange, "/sub/message/"+message.getRoomNo(), chat);
+        System.out.println("message!@!");
+        System.out.println(message);
+        smso.convertAndSend("/topic/room."+message.getRoomNo(), chat);
     }
 }
