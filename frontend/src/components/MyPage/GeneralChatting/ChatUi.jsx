@@ -60,7 +60,6 @@ export default function ChatUi({ width, height }) {
   };
 
   if (socket == null && stompClient == null) {
-
     let sock = new SockJs("https://i9a208.p.ssafy.io/ws/chat");
     let client = Stomp.over(sock);
     dispatch(setStomp({ socket: sock, client: client }));

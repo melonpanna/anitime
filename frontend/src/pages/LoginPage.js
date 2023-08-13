@@ -17,7 +17,6 @@ export default function LoginPage() {
   const api_key = "2ac7d3d2bff68cb6f3ed6501ef44f2ae";
   const redirect_uri = "https://i9a208.p.ssafy.io/kakaoLogin";
 
-  // const redirect_uri = "http://localhost:8000/api/auth/oauth2/kakao";
   const dispatch = useDispatch();
   const navi = useNavigate();
 
