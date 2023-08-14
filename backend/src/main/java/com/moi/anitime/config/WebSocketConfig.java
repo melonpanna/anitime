@@ -24,6 +24,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 //        registry.enableSimpleBroker("/sub");
         registry.setPathMatcher(new AntPathMatcher("."));
         registry.setApplicationDestinationPrefixes("/pub");
-        registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
+        registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue")
+                .setRelayHost("i9a208.p.ssafy.io")
+                .setRelayPort(61613)
+                .setSystemLogin("moi")
+                .setSystemPasscode("moi")
+                .setClientLogin("moi")
+                .setClientPasscode("moi");
     }
 }
