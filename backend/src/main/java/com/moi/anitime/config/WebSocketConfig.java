@@ -24,7 +24,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 //        registry.enableSimpleBroker("/sub");
         registry.setPathMatcher(new AntPathMatcher("."));
         registry.setApplicationDestinationPrefixes("/pub");
-        registry.setRelayPort(61613);
         registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
     }
 }
