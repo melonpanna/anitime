@@ -63,14 +63,14 @@ public class RabbitMQConfig {
         return connectionFactory;
     }
 
-//    @Bean
-//    public SimpleMessageListenerContainer container(){
-//        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//        container.setConnectionFactory(connectionFactory());
-//        container.setQueueNames(queueName);
-//        container.setMessageListener(null);
-//        return container;
-//    }
+   @Bean
+   public SimpleMessageListenerContainer container(){
+       SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+       container.setConnectionFactory(connectionFactory());
+       container.setQueueNames(queueName);
+       return container;
+   }
+
     @Bean
     public Jackson2JsonMessageConverter jsonMessageConverter(){
         //LocalDateTime serializable을 위해
