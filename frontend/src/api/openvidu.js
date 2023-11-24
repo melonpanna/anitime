@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const APPLICATION_SERVER_URL = "https://i9a208.p.ssafy.io/";
+const APPLICATION_SERVER_URL = "";
 
 export const getToken = async (mySessionId) => {
   const sessionId = await createSession(mySessionId);
